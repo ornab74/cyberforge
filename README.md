@@ -8,6 +8,44 @@ It combines a NAZA-style scanner, a seeded digital twin, real local models, opti
 
 ![CyberForge command center preview](docs/assets/cyberforge_v3_preview.png)
 
+## Research monograph
+
+The complete [CyberForge Research Monograph](CyberForge_Research_Monograph_Graylan_Janulis.docx) is also available below as one image per page for convenient reading on GitHub.
+
+![CyberForge Research Monograph — page 1](docs/assets/monograph-pages/page-01.png)
+![CyberForge Research Monograph — page 2](docs/assets/monograph-pages/page-02.png)
+![CyberForge Research Monograph — page 3](docs/assets/monograph-pages/page-03.png)
+![CyberForge Research Monograph — page 4](docs/assets/monograph-pages/page-04.png)
+![CyberForge Research Monograph — page 5](docs/assets/monograph-pages/page-05.png)
+![CyberForge Research Monograph — page 6](docs/assets/monograph-pages/page-06.png)
+![CyberForge Research Monograph — page 7](docs/assets/monograph-pages/page-07.png)
+![CyberForge Research Monograph — page 8](docs/assets/monograph-pages/page-08.png)
+![CyberForge Research Monograph — page 9](docs/assets/monograph-pages/page-09.png)
+![CyberForge Research Monograph — page 10](docs/assets/monograph-pages/page-10.png)
+![CyberForge Research Monograph — page 11](docs/assets/monograph-pages/page-11.png)
+![CyberForge Research Monograph — page 12](docs/assets/monograph-pages/page-12.png)
+![CyberForge Research Monograph — page 13](docs/assets/monograph-pages/page-13.png)
+![CyberForge Research Monograph — page 14](docs/assets/monograph-pages/page-14.png)
+![CyberForge Research Monograph — page 15](docs/assets/monograph-pages/page-15.png)
+![CyberForge Research Monograph — page 16](docs/assets/monograph-pages/page-16.png)
+![CyberForge Research Monograph — page 17](docs/assets/monograph-pages/page-17.png)
+![CyberForge Research Monograph — page 18](docs/assets/monograph-pages/page-18.png)
+![CyberForge Research Monograph — page 19](docs/assets/monograph-pages/page-19.png)
+![CyberForge Research Monograph — page 20](docs/assets/monograph-pages/page-20.png)
+![CyberForge Research Monograph — page 21](docs/assets/monograph-pages/page-21.png)
+![CyberForge Research Monograph — page 22](docs/assets/monograph-pages/page-22.png)
+![CyberForge Research Monograph — page 23](docs/assets/monograph-pages/page-23.png)
+![CyberForge Research Monograph — page 24](docs/assets/monograph-pages/page-24.png)
+![CyberForge Research Monograph — page 25](docs/assets/monograph-pages/page-25.png)
+![CyberForge Research Monograph — page 26](docs/assets/monograph-pages/page-26.png)
+![CyberForge Research Monograph — page 27](docs/assets/monograph-pages/page-27.png)
+![CyberForge Research Monograph — page 28](docs/assets/monograph-pages/page-28.png)
+![CyberForge Research Monograph — page 29](docs/assets/monograph-pages/page-29.png)
+![CyberForge Research Monograph — page 30](docs/assets/monograph-pages/page-30.png)
+![CyberForge Research Monograph — page 31](docs/assets/monograph-pages/page-31.png)
+![CyberForge Research Monograph — page 32](docs/assets/monograph-pages/page-32.png)
+![CyberForge Research Monograph — page 33](docs/assets/monograph-pages/page-33.png)
+
 ## Core capabilities
 
 - **Super Scanner:** models one surface or a connected collective of people-role aggregates, endpoints, identities, APIs, cloud systems, routes, facilities, suppliers, and data classes.
