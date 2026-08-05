@@ -1,0 +1,21 @@
+name: cyberforge
+description: Local-first blue-team AI simulation and cyber surface intelligence command center.
+publish_to: none
+version: 0.3.0+3
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.5.0
+  flutter_secure_storage: ^10.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

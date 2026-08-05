@@ -1,0 +1,257 @@
+{
+  "id": "synthetic-health-network-001",
+  "name": "Synthetic Regional Care Network",
+  "description": "A fully fictional healthcare and logistics digital twin used to evaluate identity, phishing, secret-management, supplier, and physical-access defenses.",
+  "authorizationStatement": "Authorized synthetic blue-team exercise owned by the CyberForge operator; no live systems or real people are represented.",
+  "timeHorizonDays": 30,
+  "seed": 3923929,
+  "synthetic": true,
+  "assets": [
+    {
+      "id": "idp",
+      "name": "Workforce Identity Provider",
+      "kind": "cloudService",
+      "location": "Cloud / us-east",
+      "criticality": 0.98,
+      "tags": ["identity", "sso", "tier-0"],
+      "ownerRole": "Identity Engineering",
+      "internetExposed": true,
+      "privileged": true,
+      "metadata": {}
+    },
+    {
+      "id": "secrets",
+      "name": "Application Secrets Vault",
+      "kind": "credential",
+      "location": "Cloud / us-east",
+      "criticality": 0.96,
+      "tags": ["keys", "tokens", "tier-0"],
+      "ownerRole": "Platform Security",
+      "internetExposed": false,
+      "privileged": true,
+      "metadata": {}
+    },
+    {
+      "id": "ehr",
+      "name": "Synthetic Patient Record Service",
+      "kind": "application",
+      "location": "Primary Data Center",
+      "criticality": 0.94,
+      "tags": ["regulated-data", "clinical"],
+      "ownerRole": "Clinical Applications",
+      "internetExposed": false,
+      "privileged": true,
+      "metadata": {}
+    },
+    {
+      "id": "email",
+      "name": "Workforce Email",
+      "kind": "cloudService",
+      "location": "Cloud / global",
+      "criticality": 0.8,
+      "tags": ["email", "external-contact"],
+      "ownerRole": "Collaboration Services",
+      "internetExposed": true,
+      "privileged": false,
+      "metadata": {}
+    },
+    {
+      "id": "frontdesk",
+      "name": "Main Campus Reception",
+      "kind": "facility",
+      "location": "Main Campus / Lobby",
+      "criticality": 0.62,
+      "tags": ["visitors", "badge-access"],
+      "ownerRole": "Facilities Security",
+      "internetExposed": false,
+      "privileged": false,
+      "metadata": {}
+    },
+    {
+      "id": "supplier",
+      "name": "Synthetic Billing Supplier",
+      "kind": "supplier",
+      "location": "External Supplier",
+      "criticality": 0.72,
+      "tags": ["third-party", "billing"],
+      "ownerRole": "Vendor Risk",
+      "internetExposed": true,
+      "privileged": false,
+      "metadata": {}
+    },
+    {
+      "id": "admin-laptop",
+      "name": "Privileged Administrator Endpoint",
+      "kind": "endpoint",
+      "location": "Remote / managed",
+      "criticality": 0.92,
+      "tags": ["endpoint", "tier-0-admin"],
+      "ownerRole": "Platform Administration",
+      "internetExposed": false,
+      "privileged": true,
+      "metadata": {}
+    }
+  ],
+  "controls": [
+    {
+      "id": "mfa-1",
+      "name": "Workforce MFA",
+      "type": "mfa",
+      "effectiveness": 0.62,
+      "coverage": 0.96,
+      "assetIds": [],
+      "notes": ""
+    },
+    {
+      "id": "passkeys-1",
+      "name": "Passkeys for privileged roles",
+      "type": "passkey",
+      "effectiveness": 0.91,
+      "coverage": 0.36,
+      "assetIds": ["idp", "admin-laptop"],
+      "notes": ""
+    },
+    {
+      "id": "vault-1",
+      "name": "Managed secrets vault",
+      "type": "secretsVault",
+      "effectiveness": 0.82,
+      "coverage": 0.72,
+      "assetIds": ["secrets", "ehr"],
+      "notes": ""
+    },
+    {
+      "id": "email-1",
+      "name": "Email authentication and filtering",
+      "type": "emailSecurity",
+      "effectiveness": 0.7,
+      "coverage": 0.94,
+      "assetIds": ["email"],
+      "notes": ""
+    },
+    {
+      "id": "training-1",
+      "name": "Role-based security training",
+      "type": "userTraining",
+      "effectiveness": 0.52,
+      "coverage": 0.88,
+      "assetIds": [],
+      "notes": ""
+    },
+    {
+      "id": "visitor-1",
+      "name": "Visitor registration and escort",
+      "type": "visitorManagement",
+      "effectiveness": 0.58,
+      "coverage": 0.74,
+      "assetIds": ["frontdesk"],
+      "notes": ""
+    },
+    {
+      "id": "edr-1",
+      "name": "Endpoint detection and response",
+      "type": "endpointDetection",
+      "effectiveness": 0.78,
+      "coverage": 0.92,
+      "assetIds": ["admin-laptop"],
+      "notes": ""
+    },
+    {
+      "id": "supplier-1",
+      "name": "Supplier assurance review",
+      "type": "supplierAssurance",
+      "effectiveness": 0.46,
+      "coverage": 0.65,
+      "assetIds": ["supplier"],
+      "notes": ""
+    }
+  ],
+  "humans": [
+    {
+      "id": "helpdesk-role",
+      "role": "Help Desk Analyst Cohort",
+      "location": "Main Campus",
+      "trainingScore": 0.68,
+      "workload": 0.84,
+      "externalContactRate": 0.88,
+      "privileged": false,
+      "remoteWorker": false,
+      "mfaEnabled": true,
+      "passkeyEnabled": false
+    },
+    {
+      "id": "admin-role",
+      "role": "Privileged Platform Administrator Cohort",
+      "location": "Remote / managed",
+      "trainingScore": 0.88,
+      "workload": 0.72,
+      "externalContactRate": 0.38,
+      "privileged": true,
+      "remoteWorker": true,
+      "mfaEnabled": true,
+      "passkeyEnabled": true
+    },
+    {
+      "id": "frontdesk-role",
+      "role": "Reception and Visitor Services Cohort",
+      "location": "Main Campus / Lobby",
+      "trainingScore": 0.61,
+      "workload": 0.76,
+      "externalContactRate": 0.96,
+      "privileged": false,
+      "remoteWorker": false,
+      "mfaEnabled": true,
+      "passkeyEnabled": false
+    }
+  ],
+  "edges": [
+    {
+      "fromId": "email",
+      "toId": "idp",
+      "vector": "phishing",
+      "baseLikelihood": 0.22,
+      "impactMultiplier": 0.86,
+      "label": "Workforce identity recovery path"
+    },
+    {
+      "fromId": "idp",
+      "toId": "admin-laptop",
+      "vector": "credentialExposure",
+      "baseLikelihood": 0.16,
+      "impactMultiplier": 0.93,
+      "label": "Privileged session access"
+    },
+    {
+      "fromId": "admin-laptop",
+      "toId": "secrets",
+      "vector": "credentialExposure",
+      "baseLikelihood": 0.18,
+      "impactMultiplier": 0.96,
+      "label": "Administrative secret access"
+    },
+    {
+      "fromId": "secrets",
+      "toId": "ehr",
+      "vector": "dataExfiltration",
+      "baseLikelihood": 0.14,
+      "impactMultiplier": 1.0,
+      "label": "Application credential trust"
+    },
+    {
+      "fromId": "supplier",
+      "toId": "ehr",
+      "vector": "supplyChain",
+      "baseLikelihood": 0.12,
+      "impactMultiplier": 0.84,
+      "label": "Billing integration"
+    },
+    {
+      "fromId": "frontdesk",
+      "toId": "admin-laptop",
+      "vector": "physicalIntrusion",
+      "baseLikelihood": 0.08,
+      "impactMultiplier": 0.72,
+      "label": "Shared campus access zone"
+    }
+  ]
+}

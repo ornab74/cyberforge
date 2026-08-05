@@ -1,0 +1,6 @@
+-r requirements.txt
+# Install a wheel appropriate for the target CPU/GPU platform.
+llama-cpp-python>=0.3.16,<0.4
+litert-lm==0.11.0
+# Optional post-quantum recovery. Requires liboqs available on the host.
+liboqs-python>=0.14,<0.15
