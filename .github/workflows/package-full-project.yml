@@ -1,0 +1,22 @@
+name: Package full project
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/muse-spark-dart-backend
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Remove git metadata
+        run: rm -rf .git
+      - name: Upload full project
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyberforge-full-project
+          path: .
+          include-hidden-files: true
+          compression-level: 9
