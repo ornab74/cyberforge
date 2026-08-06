@@ -12,6 +12,7 @@ from .infrastructure import (
     to_scanner_packet,
 )
 from .scanner import SUPER_SCANNER
+from .vault import VAULT, VaultError
 
 
 router = APIRouter(prefix="/v1/infrastructure", tags=["infrastructure"])
@@ -19,6 +20,19 @@ router = APIRouter(prefix="/v1/infrastructure", tags=["infrastructure"])
 
 class MachineIdentityRequest(BaseModel):
     salt: Optional[str] = Field(default=None, min_length=8, max_length=512)
+
+
+def _validate_remote_session(authorization: Optional[str]) -> None:
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(
+            status_code=401,
+            detail="Unlock the local provider vault before remote model review.",
+        )
+    token = authorization.split(" ", 1)[1].strip()
+    try:
+        VAULT.validate_session(token)
+    except VaultError as exc:
+        raise HTTPException(status_code=401, detail=str(exc)) from exc
 
 
 @router.post("/machine-id")
@@ -37,11 +51,8 @@ async def review_infrastructure(
     try:
         review = analyze_infrastructure(packet)
         include_remote = bool(packet.get("includeRemoteModels", False))
-        if include_remote and not authorization:
-            raise HTTPException(
-                status_code=401,
-                detail="Unlock the local provider vault before remote model review.",
-            )
+        if include_remote:
+            _validate_remote_session(authorization)
         scanner_packet = to_scanner_packet(review, include_remote=include_remote)
         simulation = await SUPER_SCANNER.scan(scanner_packet)
         return {
