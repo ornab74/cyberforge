@@ -5,8 +5,9 @@ from typing import Any, Optional
 from fastapi import APIRouter, Body, Header, HTTPException
 from pydantic import BaseModel
 
+from .advanced_research import analyze_research
 from .config import SETTINGS
-from .research import REPORT_SIGNER, ResearchError, analyze_research
+from .research import REPORT_SIGNER, ResearchError
 from .scanner import ScannerError
 from .storage import STORAGE, StorageError, bearer_token
 
@@ -54,12 +55,13 @@ async def research_analysis(
                     "multi-resolution",
                     "sensitivity",
                     "pareto",
-                    "council-debate",
+                    "role-separated-council",
                     "signed-certificate",
                 ],
                 metadata={
                     "runFingerprint": result.get("certificate", {}).get("runFingerprint"),
                     "schema": result.get("schema"),
+                    "councilProtocol": result.get("councilDebate", {}).get("protocol"),
                     "remoteModelsIncluded": bool(packet.get("includeRemoteModels", False)),
                 },
             )
