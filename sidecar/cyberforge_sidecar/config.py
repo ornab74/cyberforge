@@ -5,6 +5,13 @@ from pathlib import Path
 import os
 
 
+def _bool_env(name: str, default: bool) -> bool:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.lower() in {"1", "true", "yes", "on"}
+
+
 @dataclass(frozen=True)
 class ModelProfile:
     id: str
@@ -69,12 +76,43 @@ class Settings:
     session_ttl_seconds: int = int(
         os.environ.get("CYBERFORGE_SESSION_TTL_SECONDS", "1800")
     )
-    allow_env_key_import: bool = os.environ.get(
-        "CYBERFORGE_ALLOW_ENV_KEY_IMPORT", "false"
-    ).lower() in {"1", "true", "yes"}
-    require_authorization: bool = os.environ.get(
-        "CYBERFORGE_REQUIRE_AUTHORIZATION", "true"
-    ).lower() not in {"0", "false", "no"}
+    allow_env_key_import: bool = _bool_env("CYBERFORGE_ALLOW_ENV_KEY_IMPORT", False)
+    require_authorization: bool = _bool_env("CYBERFORGE_REQUIRE_AUTHORIZATION", True)
+
+    # Encrypted SQLite system of record.
+    storage_db_name: str = os.environ.get("CYBERFORGE_STORAGE_DB", "cyberforge.sqlite3")
+    auto_persist_research: bool = _bool_env("CYBERFORGE_AUTO_PERSIST_RESEARCH", True)
+
+    # Weaviate routing: auto -> remote, then embedded, then encrypted SQLite only.
+    weaviate_mode: str = os.environ.get("CYBERFORGE_WEAVIATE_MODE", "auto").strip().lower()
+    weaviate_http_host: str = os.environ.get("CYBERFORGE_WEAVIATE_HTTP_HOST", "127.0.0.1")
+    weaviate_http_port: int = int(os.environ.get("CYBERFORGE_WEAVIATE_HTTP_PORT", "8080"))
+    weaviate_grpc_host: str = os.environ.get("CYBERFORGE_WEAVIATE_GRPC_HOST", "127.0.0.1")
+    weaviate_grpc_port: int = int(os.environ.get("CYBERFORGE_WEAVIATE_GRPC_PORT", "50051"))
+    weaviate_secure: bool = _bool_env("CYBERFORGE_WEAVIATE_SECURE", False)
+    weaviate_api_key: str = os.environ.get("CYBERFORGE_WEAVIATE_API_KEY", "")
+    weaviate_collection: str = os.environ.get(
+        "CYBERFORGE_WEAVIATE_COLLECTION", "CyberForgeMemoryV1"
+    )
+    weaviate_embedded_version: str = os.environ.get(
+        "CYBERFORGE_WEAVIATE_EMBEDDED_VERSION", "1.37.0"
+    )
+    weaviate_embedded_http_port: int = int(
+        os.environ.get("CYBERFORGE_WEAVIATE_EMBEDDED_HTTP_PORT", "8079")
+    )
+    weaviate_embedded_grpc_port: int = int(
+        os.environ.get("CYBERFORGE_WEAVIATE_EMBEDDED_GRPC_PORT", "50050")
+    )
+    weaviate_embedded_log_level: str = os.environ.get(
+        "CYBERFORGE_WEAVIATE_EMBEDDED_LOG_LEVEL", "error"
+    )
+    weaviate_hybrid_alpha: float = float(
+        os.environ.get("CYBERFORGE_WEAVIATE_HYBRID_ALPHA", "0.55")
+    )
+    memory_rrf_k: int = int(os.environ.get("CYBERFORGE_MEMORY_RRF_K", "60"))
+    memory_mmr_lambda: float = float(
+        os.environ.get("CYBERFORGE_MEMORY_MMR_LAMBDA", "0.72")
+    )
 
     @property
     def vault_dir(self) -> Path:
@@ -88,6 +126,26 @@ class Settings:
     def reports_dir(self) -> Path:
         return self.data_dir / "reports"
 
+    @property
+    def storage_dir(self) -> Path:
+        return self.data_dir / "storage"
+
+    @property
+    def storage_db(self) -> Path:
+        return self.storage_dir / self.storage_db_name
+
+    @property
+    def weaviate_dir(self) -> Path:
+        return self.data_dir / "weaviate"
+
+    @property
+    def weaviate_embedded_data_path(self) -> Path:
+        return self.weaviate_dir / "data"
+
+    @property
+    def weaviate_embedded_binary_path(self) -> Path:
+        return self.weaviate_dir / "bin"
+
 
 SETTINGS = Settings()
 
@@ -98,6 +156,8 @@ def ensure_directories() -> None:
         SETTINGS.vault_dir,
         SETTINGS.models_dir,
         SETTINGS.reports_dir,
+        SETTINGS.storage_dir,
+        SETTINGS.weaviate_dir,
     ):
         path.mkdir(parents=True, exist_ok=True)
         try:
