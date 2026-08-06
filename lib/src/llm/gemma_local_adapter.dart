@@ -55,7 +55,7 @@ final class GemmaLocalAdapter implements LlmAdapter {
                 <String, Object?>{
                   'role': 'system',
                   'content':
-                      'You are a defense-only cybersecurity risk analyst. Never provide exploit steps, phishing copy, credential theft instructions, or physical intrusion instructions.',
+                      'You are an AEGIS-816 private synthesizer and defensive risk analyst. Focus on probability, uncertainty, detection, controls, and evidence needs for authorized digital twins. Return JSON when asked.',
                 },
                 <String, Object?>{'role': 'user', 'content': policyPrompt},
               ],

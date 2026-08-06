@@ -546,8 +546,16 @@ class SuperScanner:
     async def _local_llama_micro_passes(
         self, surfaces: list[dict[str, Any]]
     ) -> dict[str, dict[str, Any]]:
+        """Lattice-tuned Llama micro-scans for any individual surface kind.
+
+        Pipeline (from NAZA vpnscanner pattern, generalized beyond VPN):
+        psutil metrics → RGB → PennyLane entropic score → optional GPT-5.6
+        prompt rewrite → PUNKD + chunked Llama generation → JSON risk packet.
+        """
         if not MODEL_MANAGER.status(LLAMA3_SMALL.id).loaded:
             return {}
+        from .surface_lattice import scan_individual_surface
+
         ranked = sorted(
             surfaces,
             key=lambda item: float(item["criticality"]) * float(item["exposure"]),
@@ -555,26 +563,31 @@ class SuperScanner:
         )[:24]
         outputs: dict[str, dict[str, Any]] = {}
         for surface in ranked:
-            prompt = self._micro_prompt(surface)
             try:
-                text = await asyncio.to_thread(
-                    MODEL_MANAGER.generate,
-                    LLAMA3_SMALL.id,
-                    prompt,
-                    max_tokens=220,
-                    temperature=0.08,
-                    json_mode=True,
+                result = await scan_individual_surface(
+                    surface,
+                    use_gpt_composer=True,
+                    use_chunked=True,
+                    include_system_entropy=True,
                 )
-                payload = self._extract_json(text)
                 outputs[str(surface["id"])] = {
-                    "risk": self._clamp(float(payload.get("risk", 0.5))),
-                    "uncertainty": self._clamp(float(payload.get("uncertainty", 0.5))),
+                    "risk": self._clamp(float(result.get("risk", 0.5))),
+                    "uncertainty": self._clamp(float(result.get("uncertainty", 0.5))),
                     "vectors": [
-                        str(item) for item in payload.get("vectors", []) if str(item) in DIMENSIONS
+                        str(item)
+                        for item in result.get("vectors", [])
+                        if str(item) in DIMENSIONS
                     ][:4],
-                    "observations": [str(item)[:240] for item in payload.get("observations", [])][:4],
-                    "controls": [str(item)[:280] for item in payload.get("controls", [])][:4],
-                    "evidence_needed": [str(item)[:240] for item in payload.get("evidence_needed", [])][:4],
+                    "observations": [
+                        str(item)[:240] for item in result.get("observations", [])
+                    ][:4],
+                    "controls": [
+                        str(item)[:280] for item in result.get("controls", [])
+                    ][:4],
+                    "evidence_needed": [
+                        str(item)[:240] for item in result.get("evidence_needed", [])
+                    ][:4],
+                    "lattice": result.get("lattice"),
                 }
             except Exception:
                 continue
@@ -582,29 +595,16 @@ class SuperScanner:
 
     @staticmethod
     def _micro_prompt(surface: dict[str, Any]) -> str:
-        return f"""
-You are the CyberForge local Llama surface micro-scanner.
-Analyze only this authorized abstract defensive surface. Do not produce exploit,
-phishing, malware, evasion, credential-theft, or physical-entry instructions.
-Return JSON only:
-{{"risk":0.0,"uncertainty":0.0,"vectors":["credential"],
- "observations":["defensive observation"],
- "controls":["safe control improvement"],
- "evidence_needed":["passive evidence that reduces uncertainty"]}}.
-Valid vectors: {', '.join(DIMENSIONS)}.
-Surface: {json.dumps(surface, sort_keys=True)}
-""".strip()
+        """Compatibility helper — preferred path is surface_lattice.scan_individual_surface."""
+        from .surface_lattice import build_base_surface_prompt, lattice_tuning_block
+
+        return build_base_surface_prompt(surface, lattice=lattice_tuning_block())
 
     @staticmethod
     def _extract_json(text: str) -> dict[str, Any]:
-        start, end = text.find("{"), text.rfind("}")
-        if start < 0 or end <= start:
-            raise ValueError("no JSON")
-        payload = json.loads(text[start : end + 1])
-        if not isinstance(payload, dict):
-            raise ValueError("not object")
-        return payload
+        from .surface_lattice import parse_micro_json
 
+        return parse_micro_json(text)
     @staticmethod
     def _council_packet(packet: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         return {

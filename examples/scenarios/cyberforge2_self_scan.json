@@ -1,0 +1,266 @@
+{
+  "name": "CyberForge-2 Self-Assessment Digital Twin",
+  "description": "Authorized defensive simulation of the local CyberForge-2 repository and its runtime control plane on this workstation.",
+  "authorization": {
+    "authorized": true,
+    "statement": "I own or am explicitly authorized to simulate every surface in this scenario. Target is the local cyberforge-2 project at /home/user/cyber/cyberforge-2.",
+    "scope": "Local CyberForge-2 source tree, sidecar, vault, models, and desktop app on this host",
+    "synthetic": false
+  },
+  "location": {
+    "name": "Local workstation project root",
+    "latitude": null,
+    "longitude": null,
+    "coordinatesOptional": true
+  },
+  "worlds": 8000,
+  "seed": 20260805,
+  "includeRemoteModels": false,
+  "surfaces": [
+    {
+      "id": "repo-source",
+      "label": "CyberForge-2 source repository",
+      "kind": "data",
+      "location": "/home/user/cyber/cyberforge-2",
+      "criticality": 0.88,
+      "exposure": 0.55,
+      "controlStrength": 0.62,
+      "humanPressure": 0.4,
+      "telemetryConfidence": 0.85,
+      "inventoryCount": 63,
+      "signals": [
+        "44 dart files",
+        "19 python files",
+        "16 docs",
+        "local-first blue-team tooling"
+      ]
+    },
+    {
+      "id": "flutter-desktop",
+      "label": "Flutter Linux command center",
+      "kind": "endpoint",
+      "location": "Linux desktop process",
+      "criticality": 0.72,
+      "exposure": 0.48,
+      "controlStrength": 0.58,
+      "humanPressure": 0.35,
+      "telemetryConfidence": 0.8,
+      "inventoryCount": 1,
+      "signals": [
+        "desktop UI",
+        "auto backend bootstrap",
+        "file-backed secure config"
+      ]
+    },
+    {
+      "id": "fastapi-sidecar",
+      "label": "FastAPI sidecar control plane",
+      "kind": "api",
+      "location": "127.0.0.1:8788",
+      "criticality": 0.93,
+      "exposure": 0.42,
+      "controlStrength": 0.78,
+      "humanPressure": 0.25,
+      "telemetryConfidence": 0.9,
+      "inventoryCount": 1,
+      "signals": [
+        "loopback bind",
+        "defense-only policy",
+        "SIMCOM + scan APIs"
+      ]
+    },
+    {
+      "id": "provider-vault",
+      "label": "AES-GCM provider vault",
+      "kind": "credential",
+      "location": "~/.local/share/cyberforge/vault",
+      "criticality": 0.97,
+      "exposure": 0.3,
+      "controlStrength": 0.84,
+      "humanPressure": 0.22,
+      "telemetryConfidence": 0.92,
+      "inventoryCount": 4,
+      "signals": [
+        "Argon2id password wrap",
+        "device unlock key on disk",
+        "provider records",
+        ".env password backup"
+      ]
+    },
+    {
+      "id": "local-llama",
+      "label": "Local Llama 3 micro-scanner",
+      "kind": "server",
+      "location": "llama-cpp-python runtime",
+      "criticality": 0.8,
+      "exposure": 0.35,
+      "controlStrength": 0.7,
+      "humanPressure": 0.15,
+      "telemetryConfidence": 0.88,
+      "inventoryCount": 1,
+      "signals": [
+        "encrypted GGUF at rest",
+        "temporary decrypt on load",
+        "prompt-only worker"
+      ]
+    },
+    {
+      "id": "local-gemma",
+      "label": "Local Gemma 4 LiteRT synthesizer",
+      "kind": "server",
+      "location": "litert-lm runtime",
+      "criticality": 0.82,
+      "exposure": 0.33,
+      "controlStrength": 0.72,
+      "humanPressure": 0.15,
+      "telemetryConfidence": 0.88,
+      "inventoryCount": 1,
+      "signals": [
+        "encrypted litertlm at rest",
+        "private synthesis path"
+      ]
+    },
+    {
+      "id": "dotenv-secrets",
+      "label": "Project .env secret surface",
+      "kind": "credential",
+      "location": "/home/user/cyber/cyberforge-2/.env",
+      "criticality": 0.9,
+      "exposure": 0.6,
+      "controlStrength": 0.55,
+      "humanPressure": 0.45,
+      "telemetryConfidence": 0.86,
+      "inventoryCount": 1,
+      "signals": [
+        "mode 0600 expected",
+        "vault password",
+        "provider tokens",
+        "risk of shell/history leakage"
+      ]
+    },
+    {
+      "id": "dependency-supply",
+      "label": "Python and Flutter dependency plane",
+      "kind": "vendor",
+      "location": "pubspec + sidecar requirements",
+      "criticality": 0.75,
+      "exposure": 0.58,
+      "controlStrength": 0.6,
+      "humanPressure": 0.3,
+      "telemetryConfidence": 0.77,
+      "inventoryCount": 30,
+      "signals": [
+        "pip wheels",
+        "llama-cpp native build",
+        "litert-lm pin",
+        "flutter plugins"
+      ]
+    },
+    {
+      "id": "test-harness",
+      "label": "Validation and unit test harness",
+      "kind": "endpoint",
+      "location": "test/ and sidecar/tests",
+      "criticality": 0.55,
+      "exposure": 0.25,
+      "controlStrength": 0.7,
+      "humanPressure": 0.2,
+      "telemetryConfidence": 0.83,
+      "inventoryCount": 11,
+      "signals": [
+        "pytest",
+        "flutter_test",
+        "verify.sh"
+      ]
+    },
+    {
+      "id": "model-store",
+      "label": "Encrypted local model store",
+      "kind": "data",
+      "location": "~/.local/share/cyberforge/models",
+      "criticality": 0.85,
+      "exposure": 0.28,
+      "controlStrength": 0.8,
+      "humanPressure": 0.1,
+      "telemetryConfidence": 0.91,
+      "inventoryCount": 2,
+      "signals": [
+        "AES-GCM .cfgm",
+        "SHA-256 pinned profiles",
+        "multi-GB artifacts"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": "flutter-desktop",
+      "target": "fastapi-sidecar",
+      "type": "calls",
+      "trust": 0.9,
+      "controlStrength": 0.8
+    },
+    {
+      "source": "fastapi-sidecar",
+      "target": "provider-vault",
+      "type": "authenticates",
+      "trust": 0.88,
+      "controlStrength": 0.82
+    },
+    {
+      "source": "fastapi-sidecar",
+      "target": "local-llama",
+      "type": "invokes",
+      "trust": 0.85,
+      "controlStrength": 0.75
+    },
+    {
+      "source": "fastapi-sidecar",
+      "target": "local-gemma",
+      "type": "invokes",
+      "trust": 0.85,
+      "controlStrength": 0.75
+    },
+    {
+      "source": "fastapi-sidecar",
+      "target": "model-store",
+      "type": "reads",
+      "trust": 0.9,
+      "controlStrength": 0.8
+    },
+    {
+      "source": "dotenv-secrets",
+      "target": "provider-vault",
+      "type": "seeds",
+      "trust": 0.5,
+      "controlStrength": 0.45
+    },
+    {
+      "source": "repo-source",
+      "target": "dependency-supply",
+      "type": "depends",
+      "trust": 0.7,
+      "controlStrength": 0.55
+    },
+    {
+      "source": "repo-source",
+      "target": "flutter-desktop",
+      "type": "builds",
+      "trust": 0.8,
+      "controlStrength": 0.7
+    },
+    {
+      "source": "repo-source",
+      "target": "fastapi-sidecar",
+      "type": "builds",
+      "trust": 0.8,
+      "controlStrength": 0.7
+    },
+    {
+      "source": "test-harness",
+      "target": "repo-source",
+      "type": "validates",
+      "trust": 0.75,
+      "controlStrength": 0.7
+    }
+  ]
+}

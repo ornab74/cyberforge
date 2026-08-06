@@ -2,5 +2,8 @@
 # Install a wheel appropriate for the target CPU/GPU platform.
 llama-cpp-python>=0.3.16,<0.4
 litert-lm==0.11.0
+# Host metrics + optional quantum-inspired entropic lattice for individual-surface micro-scans.
+psutil>=6.0,<8
+pennylane>=0.38,<0.45
 # Optional post-quantum recovery. Requires liboqs available on the host.
-liboqs-python>=0.14,<0.15
+liboqs-python==0.16.0

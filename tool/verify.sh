@@ -12,7 +12,11 @@ if command -v flutter >/dev/null 2>&1; then
 else
   echo "flutter not installed; skipped Flutter checks" >&2
 fi
-if grep -Rni --exclude-dir=.git --exclude='*.zip' --exclude='*.tar.gz' -E 'a[n]med' .; then
-  echo "A prohibited real-organization reference remains." >&2
+# Product sources only — operator reference dumps (e.g. datapullexample) excluded.
+if grep -Rni --exclude-dir=.git --exclude-dir=.venv --exclude-dir=build \
+  --exclude='datapullexample' --exclude='*.zip' --exclude='*.tar.gz' \
+  --exclude='*.png' --exclude='*.docx' -E 'a[n]med' \
+  lib sidecar prompts test tool bin docs README.md Makefile pubspec.yaml; then
+  echo "A prohibited real-organization reference remains in product sources." >&2
   exit 1
 fi

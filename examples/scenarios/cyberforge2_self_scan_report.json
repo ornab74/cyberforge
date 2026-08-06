@@ -1,0 +1,697 @@
+{
+  "attackPaths": [
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.08355235893299501,
+      "source": "dotenv-secrets",
+      "target": "provider-vault",
+      "type": "seeds"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.07968093151844285,
+      "source": "repo-source",
+      "target": "dependency-supply",
+      "type": "depends"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.06070928115690886,
+      "source": "repo-source",
+      "target": "flutter-desktop",
+      "type": "builds"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.06070928115690886,
+      "source": "repo-source",
+      "target": "fastapi-sidecar",
+      "type": "builds"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.03742911412108153,
+      "source": "flutter-desktop",
+      "target": "fastapi-sidecar",
+      "type": "calls"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.032451072043547066,
+      "source": "fastapi-sidecar",
+      "target": "local-llama",
+      "type": "invokes"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.032451072043547066,
+      "source": "fastapi-sidecar",
+      "target": "local-gemma",
+      "type": "invokes"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.027487966907475153,
+      "source": "fastapi-sidecar",
+      "target": "model-store",
+      "type": "reads"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.02418941087857815,
+      "source": "fastapi-sidecar",
+      "target": "provider-vault",
+      "type": "authenticates"
+    },
+    {
+      "interpretation": "simulated trust-path amplification",
+      "pressure": 0.021079732410279366,
+      "source": "test-harness",
+      "target": "repo-source",
+      "type": "validates"
+    }
+  ],
+  "authorization": {
+    "accepted": true,
+    "scope": "Local CyberForge-2 source tree, sidecar, vault, models, and desktop app on this host",
+    "synthetic": false
+  },
+  "bootcom": [
+    "SIMCOM ACTIVE // DEFENSIVE DIGITAL TWIN // LOCAL-FIRST",
+    "[00:00:00.000] Safety kernel: defense-only policy locked",
+    "[00:00:00.041] Gamma coherence fabric: simulated",
+    "[00:00:00.112] Logical register: 81,611,511 simulated qubits",
+    "[00:00:00.189] Monte Carlo scheduler: ready",
+    "[00:00:00.267] Surface graph: identity / endpoint / API / cloud / physical / vendor",
+    "[00:00:00.341] Local Llama micro-scanner: standby",
+    "[00:00:00.418] Local Gemma private synthesizer: standby",
+    "[00:00:00.502] AES-256-GCM vault boundary: armed",
+    "[00:00:00.589] ML-KEM recovery boundary: capability check complete",
+    "[00:00:00.712] Live exploitation and attribution shortcuts: disabled",
+    "[00:00:00.799] BOOT COMPLETE"
+  ],
+  "council": {
+    "consensus": {
+      "attemptedModels": 1,
+      "controls": [
+        "Expand phishing-resistant MFA and rotate exposed secrets.",
+        "Apply data-classification-aware egress controls and canary records.",
+        "Increase EDR coverage, isolation speed, and application control.",
+        "Exercise segmented recovery and immutable backup restoration."
+      ],
+      "disagreement": 0.0,
+      "priorityVectors": [
+        "credential",
+        "data",
+        "endpoint",
+        "availability"
+      ],
+      "successfulModels": 1,
+      "summary": "1 model perspectives converged on credential, data, endpoint. Disagreement is 0%; retain human review."
+    },
+    "opinions": [
+      {
+        "assumptions": [
+          "No live exploitation or active probing was performed."
+        ],
+        "controls": [
+          "Expand phishing-resistant MFA and rotate exposed secrets.",
+          "Apply data-classification-aware egress controls and canary records.",
+          "Increase EDR coverage, isolation speed, and application control.",
+          "Exercise segmented recovery and immutable backup restoration."
+        ],
+        "error": null,
+        "evidence_needed": [
+          "Identity-provider authentication telemetry",
+          "Endpoint and network detection coverage inventory",
+          "Recent backup restoration evidence"
+        ],
+        "latency_ms": 0,
+        "model": "cyberforge-policy-calibrator-v3",
+        "priority_vectors": [
+          "credential",
+          "data",
+          "endpoint",
+          "availability"
+        ],
+        "provider": "offline",
+        "succeeded": true,
+        "summary": "Offline calibration prioritizes the highest modeled defensive surfaces. The result is a planning signal derived from scenario evidence and seeded simulation; it is not a forensic attribution.",
+        "uncertainty": 0.26999999999999996
+      }
+    ]
+  },
+  "description": "Authorized defensive simulation of the local CyberForge-2 repository and its runtime control plane on this workstation.",
+  "dimensionScores": {
+    "api": 0.0728099821859625,
+    "availability": 0.1799424451502541,
+    "cloud": 0.0,
+    "credential": 1.0,
+    "data": 0.46056005234289227,
+    "endpoint": 0.1844728482159189,
+    "phishing": 0.0,
+    "physical": 0.0,
+    "vendor": 0.08828954877623195
+  },
+  "findings": [
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.8915772496747987,
+      "controls": [
+        "Require phishing-resistant MFA, scoped secrets, and rapid rotation evidence."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "dotenv-secrets",
+      "impact": 0.8235,
+      "kind": "credential",
+      "label": "Project .env secret surface",
+      "likely_window": "Continuous exposure with periodic control-drift peaks",
+      "local_model_adjustment": 0.0,
+      "location": "/home/user/cyber/cyberforge-2/.env",
+      "observations": [
+        "mode 0600 expected",
+        "vault password",
+        "provider tokens",
+        "risk of shell/history leakage"
+      ],
+      "priority_dimensions": [
+        "credential"
+      ],
+      "probability": 0.36517639393791523,
+      "risk": 0.3007227604078732
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.8875772496747987,
+      "controls": [
+        "Apply classification-aware egress controls, canaries, and data-access anomaly detection.",
+        "Require phishing-resistant MFA, scoped secrets, and rapid rotation evidence."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "repo-source",
+      "impact": 0.7969,
+      "kind": "data",
+      "label": "CyberForge-2 source repository",
+      "likely_window": "Continuous exposure with periodic control-drift peaks",
+      "local_model_adjustment": 0.0,
+      "location": "/home/user/cyber/cyberforge-2",
+      "observations": [
+        "44 dart files",
+        "19 python files",
+        "16 docs",
+        "local-first blue-team tooling"
+      ],
+      "priority_dimensions": [
+        "data",
+        "credential"
+      ],
+      "probability": 0.3124078371499043,
+      "risk": 0.24895780542475873
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.8555772496747986,
+      "controls": [
+        "Use just-in-time vendor access, session approval, recording, and assurance evidence.",
+        "Require phishing-resistant MFA, scoped secrets, and rapid rotation evidence.",
+        "Segment recovery dependencies and prove immutable backup restoration."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "dependency-supply",
+      "impact": 0.693,
+      "kind": "vendor",
+      "label": "Python and Flutter dependency plane",
+      "likely_window": "Approved support windows and after-hours maintenance",
+      "local_model_adjustment": 0.0,
+      "location": "pubspec + sidecar requirements",
+      "observations": [
+        "pip wheels",
+        "llama-cpp native build",
+        "litert-lm pin",
+        "flutter plugins"
+      ],
+      "priority_dimensions": [
+        "vendor",
+        "credential",
+        "availability"
+      ],
+      "probability": 0.32353291071671153,
+      "risk": 0.22420830712668108
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.9075772496747987,
+      "controls": [
+        "Constrain tokens, validate schemas, rate-limit anomalies, and inventory machine identities.",
+        "Require phishing-resistant MFA, scoped secrets, and rapid rotation evidence.",
+        "Apply classification-aware egress controls, canaries, and data-access anomaly detection."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "fastapi-sidecar",
+      "impact": 0.8059,
+      "kind": "api",
+      "label": "FastAPI sidecar control plane",
+      "likely_window": "Continuous; elevated during deployment and token-rotation windows",
+      "local_model_adjustment": 0.0,
+      "location": "127.0.0.1:8788",
+      "observations": [
+        "loopback bind",
+        "defense-only policy",
+        "SIMCOM + scan APIs"
+      ],
+      "priority_dimensions": [
+        "api",
+        "credential",
+        "data"
+      ],
+      "probability": 0.22943103871638715,
+      "risk": 0.1848984741015364
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.8675772496747987,
+      "controls": [
+        "Close EDR coverage gaps and rehearse one-click isolation with evidence capture.",
+        "Require phishing-resistant MFA, scoped secrets, and rapid rotation evidence.",
+        "Apply classification-aware egress controls, canaries, and data-access anomaly detection."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "flutter-desktop",
+      "impact": 0.6580999999999999,
+      "kind": "endpoint",
+      "label": "Flutter Linux command center",
+      "likely_window": "Continuous; elevated after software rollout or policy drift",
+      "local_model_adjustment": 0.0,
+      "location": "Linux desktop process",
+      "observations": [
+        "desktop UI",
+        "auto backend bootstrap",
+        "file-backed secure config"
+      ],
+      "priority_dimensions": [
+        "endpoint",
+        "credential",
+        "data"
+      ],
+      "probability": 0.2759553457572791,
+      "risk": 0.18160621304286534
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.9155772496747987,
+      "controls": [
+        "Require phishing-resistant MFA, scoped secrets, and rapid rotation evidence."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "provider-vault",
+      "impact": 0.8170000000000001,
+      "kind": "credential",
+      "label": "AES-GCM provider vault",
+      "likely_window": "Continuous exposure with periodic control-drift peaks",
+      "local_model_adjustment": 0.0,
+      "location": "~/.local/share/cyberforge/vault",
+      "observations": [
+        "Argon2id password wrap",
+        "device unlock key on disk",
+        "provider records",
+        ".env password backup"
+      ],
+      "priority_dimensions": [
+        "credential"
+      ],
+      "probability": 0.19431343568631287,
+      "risk": 0.15875407695571764
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.8995772496747987,
+      "controls": [
+        "Close EDR coverage gaps and rehearse one-click isolation with evidence capture.",
+        "Segment recovery dependencies and prove immutable backup restoration.",
+        "Apply classification-aware egress controls, canaries, and data-access anomaly detection."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "local-llama",
+      "impact": 0.687,
+      "kind": "server",
+      "label": "Local Llama 3 micro-scanner",
+      "likely_window": "Continuous; elevated during backup, patch, and maintenance windows",
+      "local_model_adjustment": 0.0,
+      "location": "llama-cpp-python runtime",
+      "observations": [
+        "encrypted GGUF at rest",
+        "temporary decrypt on load",
+        "prompt-only worker"
+      ],
+      "priority_dimensions": [
+        "endpoint",
+        "availability",
+        "data"
+      ],
+      "probability": 0.17358244956685742,
+      "risk": 0.11925114285243106
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.8995772496747987,
+      "controls": [
+        "Close EDR coverage gaps and rehearse one-click isolation with evidence capture.",
+        "Segment recovery dependencies and prove immutable backup restoration.",
+        "Apply classification-aware egress controls, canaries, and data-access anomaly detection."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "local-gemma",
+      "impact": 0.6995999999999999,
+      "kind": "server",
+      "label": "Local Gemma 4 LiteRT synthesizer",
+      "likely_window": "Continuous; elevated during backup, patch, and maintenance windows",
+      "local_model_adjustment": 0.0,
+      "location": "litert-lm runtime",
+      "observations": [
+        "encrypted litertlm at rest",
+        "private synthesis path"
+      ],
+      "priority_dimensions": [
+        "endpoint",
+        "availability",
+        "data"
+      ],
+      "probability": 0.16223309196606894,
+      "risk": 0.11349827113946181
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.9115772496747987,
+      "controls": [
+        "Apply classification-aware egress controls, canaries, and data-access anomaly detection.",
+        "Require phishing-resistant MFA, scoped secrets, and rapid rotation evidence."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "model-store",
+      "impact": 0.7120000000000001,
+      "kind": "data",
+      "label": "Encrypted local model store",
+      "likely_window": "Continuous exposure with periodic control-drift peaks",
+      "local_model_adjustment": 0.0,
+      "location": "~/.local/share/cyberforge/models",
+      "observations": [
+        "AES-GCM .cfgm",
+        "SHA-256 pinned profiles",
+        "multi-GB artifacts"
+      ],
+      "priority_dimensions": [
+        "data",
+        "credential"
+      ],
+      "probability": 0.13368809477583388,
+      "risk": 0.09518592348039373
+    },
+    {
+      "assumptions": [
+        "Surface fields are normalized planning estimates.",
+        "No live probing or exploit execution occurred.",
+        "Shared-pressure correlation is simulated, not observed."
+      ],
+      "confidence": 0.8795772496747987,
+      "controls": [
+        "Close EDR coverage gaps and rehearse one-click isolation with evidence capture.",
+        "Require phishing-resistant MFA, scoped secrets, and rapid rotation evidence.",
+        "Apply classification-aware egress controls, canaries, and data-access anomaly detection."
+      ],
+      "evidence_needed": [
+        "Passive telemetry and control evidence for this surface",
+        "A recent owner-authorized recovery or containment exercise result"
+      ],
+      "id": "test-harness",
+      "impact": 0.48050000000000004,
+      "kind": "endpoint",
+      "label": "Validation and unit test harness",
+      "likely_window": "Continuous; elevated after software rollout or policy drift",
+      "local_model_adjustment": 0.0,
+      "location": "test/ and sidecar/tests",
+      "observations": [
+        "pytest",
+        "flutter_test",
+        "verify.sh"
+      ],
+      "priority_dimensions": [
+        "endpoint",
+        "credential",
+        "data"
+      ],
+      "probability": 0.11260540817456925,
+      "risk": 0.05410689862788053
+    }
+  ],
+  "forensicBoundary": {
+    "actor": "not attributed",
+    "country": "not attributed",
+    "entryVector": "simulation hypotheses only",
+    "timestamps": "probabilistic planning windows, not forensic facts"
+  },
+  "generatedAt": "2026-08-05T22:39:18.939811+00:00",
+  "hotspots": [
+    {
+      "location": "/home/user/cyber/cyberforge-2/.env",
+      "risk": 1.0
+    },
+    {
+      "location": "/home/user/cyber/cyberforge-2",
+      "risk": 0.827864858273763
+    },
+    {
+      "location": "pubspec + sidecar requirements",
+      "risk": 0.7455648080065013
+    },
+    {
+      "location": "127.0.0.1:8788",
+      "risk": 0.6148469568806724
+    },
+    {
+      "location": "Linux desktop process",
+      "risk": 0.6038991288738872
+    },
+    {
+      "location": "~/.local/share/cyberforge/vault",
+      "risk": 0.5279084188386604
+    },
+    {
+      "location": "llama-cpp-python runtime",
+      "risk": 0.39654844445658044
+    },
+    {
+      "location": "litert-lm runtime",
+      "risk": 0.3774182937983244
+    },
+    {
+      "location": "~/.local/share/cyberforge/models",
+      "risk": 0.31652384193099364
+    },
+    {
+      "location": "test/ and sidecar/tests",
+      "risk": 0.17992285836461072
+    }
+  ],
+  "impactEstimate": {
+    "affectedEquivalentPercent": {
+      "high": 0.8260869565217391,
+      "low": 0.0,
+      "median": 0.2608695652173913
+    },
+    "affectedEquivalentRange": {
+      "high": 95,
+      "low": 0,
+      "median": 30
+    },
+    "interpretation": "Equivalent affected inventory represents simulated loss of trustworthy operation, not confirmed malware presence on each item.",
+    "inventoryModeled": 115
+  },
+  "location": {
+    "coordinatesOptional": true,
+    "latitude": null,
+    "longitude": null,
+    "name": "Local workstation project root"
+  },
+  "mode": "defensive-hybrid-simulation",
+  "name": "CyberForge-2 Self-Assessment Digital Twin",
+  "overallRisk": 0.16811898731595995,
+  "packetDigest": "ac41ff42896e34cf2df4b11dbc99226ce76f31bf117580215e8e927189028231",
+  "summary": "The simulated defensive twin prioritizes credential, data, endpoint. The highest-pressure modeled surface is Project .env secret surface. Across correlated worlds, the equivalent inventory losing trustworthy operation falls between 0 and 95 of 115 items at the 5th\u201395th percentile. This is a planning range, not a forensic machine count or attribution.",
+  "telemetry": {
+    "coherence": 0.9921879362036136,
+    "durationMs": 55,
+    "engine": "AEGIS-816 / Dyson Sphere Gamma Simstation",
+    "localGemmaLoaded": false,
+    "localLlamaPasses": 0,
+    "logicalCells": 2400000000000000000,
+    "observationFrames": 4096,
+    "propagatedPaths": 10,
+    "redactions": 0,
+    "seed": 20260805,
+    "simulatedQubits": 81611511,
+    "surfaceLinks": 10,
+    "truthLabel": "quantum-inspired conventional simulation",
+    "worlds": 8000
+  },
+  "timeline": [
+    {
+      "hour": 0,
+      "pressure": 0.8514886143686129
+    },
+    {
+      "hour": 1,
+      "pressure": 1.0
+    },
+    {
+      "hour": 2,
+      "pressure": 0.9765167635260451
+    },
+    {
+      "hour": 3,
+      "pressure": 0.9429706769273798
+    },
+    {
+      "hour": 4,
+      "pressure": 0.8809999644279304
+    },
+    {
+      "hour": 5,
+      "pressure": 0.8717915717123692
+    },
+    {
+      "hour": 6,
+      "pressure": 0.8978013060370172
+    },
+    {
+      "hour": 7,
+      "pressure": 0.8782236637314154
+    },
+    {
+      "hour": 8,
+      "pressure": 0.8694171610347018
+    },
+    {
+      "hour": 9,
+      "pressure": 0.858149044911747
+    },
+    {
+      "hour": 10,
+      "pressure": 0.9071417158690327
+    },
+    {
+      "hour": 11,
+      "pressure": 0.8643603473068072
+    },
+    {
+      "hour": 12,
+      "pressure": 0.9562318915215764
+    },
+    {
+      "hour": 13,
+      "pressure": 0.9166942048192354
+    },
+    {
+      "hour": 14,
+      "pressure": 0.8309133505597859
+    },
+    {
+      "hour": 15,
+      "pressure": 0.8612357385628913
+    },
+    {
+      "hour": 16,
+      "pressure": 0.8622946502734804
+    },
+    {
+      "hour": 17,
+      "pressure": 0.8382269924960287
+    },
+    {
+      "hour": 18,
+      "pressure": 0.901498444662872
+    },
+    {
+      "hour": 19,
+      "pressure": 0.8545417988164474
+    },
+    {
+      "hour": 20,
+      "pressure": 0.892413951912631
+    },
+    {
+      "hour": 21,
+      "pressure": 0.8971457723947134
+    },
+    {
+      "hour": 22,
+      "pressure": 0.9712937298196637
+    },
+    {
+      "hour": 23,
+      "pressure": 0.9787309981322205
+    }
+  ]
+}

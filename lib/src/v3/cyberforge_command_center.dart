@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../backend/secure_config_store.dart';
 import '../theme/cyberforge_theme.dart';
+import '../ui/advanced_boot_guide.dart';
 import 'models.dart';
 import 'sidecar_client.dart';
 import 'widgets/gamma_simstation_display.dart';
@@ -23,6 +25,7 @@ final class CyberForgeCommandCenter extends StatefulWidget {
 final class _CyberForgeCommandCenterState
     extends State<CyberForgeCommandCenter> {
   final _client = CyberForgeSidecarClient();
+  final _config = SecureConfigStore();
   final _locationController = TextEditingController(text: 'Named region only');
   final _latitudeController = TextEditingController();
   final _longitudeController = TextEditingController();
@@ -39,6 +42,8 @@ final class _CyberForgeCommandCenterState
   var _running = false;
   var _includeRemote = false;
   var _includeNewsCapture = false;
+  var _showAdvancedGuide = false;
+  String? _bootStatus;
   String? _error;
   final List<String> _terminal = <String>[
     'CyberForge SIMCOM v3',
@@ -64,8 +69,40 @@ final class _CyberForgeCommandCenterState
   }
 
   Future<void> _initialize() async {
-    setState(() => _loading = true);
-    final health = await _client.health();
+    setState(() {
+      _loading = true;
+      _bootStatus = 'Contacting AEGIS-816 sidecar…';
+    });
+
+    // Retry health briefly so auto-started backends can bind.
+    var health = CyberForgeHealth.offline();
+    for (var attempt = 0; attempt < 12; attempt++) {
+      health = await _client.health();
+      if (health.online) break;
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+    }
+
+    // Every boot: unlock vault (device key → password from secure config).
+    if (health.online && !health.vaultUnlocked) {
+      setState(() => _bootStatus = 'Unlocking encrypted vault…');
+      try {
+        final password = await _config.vaultPassword();
+        final method = await _client.unlockOnBoot(password: password);
+        _bootStatus = 'Vault unlocked via $method';
+        _terminal.add('[BOOT] Vault session established ($method).');
+        health = await _client.health();
+      } on Object catch (error) {
+        _bootStatus = 'Vault still locked — unlock from Vault & Models';
+        _terminal.add('[BOOT] Vault unlock deferred: $error');
+      }
+    } else if (health.online && health.vaultUnlocked) {
+      _bootStatus = 'Vault already unlocked';
+      _terminal.add('[BOOT] Vault already unlocked on sidecar.');
+    } else {
+      _bootStatus = 'Sidecar offline — start with ./tool/run_dev.sh';
+      _terminal.add('[BOOT] Sidecar offline on 127.0.0.1:8788.');
+    }
+
     Map<String, dynamic> packet;
     if (health.online) {
       try {
@@ -77,11 +114,15 @@ final class _CyberForgeCommandCenterState
     } else {
       packet = _fallbackPacket();
     }
+
+    final guideDone = await _config.isAdvancedGuideComplete();
+
     if (!mounted) return;
     setState(() {
       _health = health;
       _packet = packet;
       _loading = false;
+      _showAdvancedGuide = !guideDone;
       _syncControllers(packet);
     });
   }
@@ -206,7 +247,9 @@ final class _CyberForgeCommandCenterState
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final wide = constraints.maxWidth >= 980;
-        return Scaffold(
+        return Stack(
+          children: <Widget>[
+            Scaffold(
           appBar: wide ? null : _mobileAppBar(),
           body: Row(
             children: <Widget>[
@@ -216,10 +259,45 @@ final class _CyberForgeCommandCenterState
                 child: Column(
                   children: <Widget>[
                     if (wide) _topBar(),
+                    if (_bootStatus != null && _loading)
+                      Material(
+                        color: CyberForgeColors.surfaceRaised,
+                        child: ListTile(
+                          dense: true,
+                          leading: const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          title: Text(
+                            _bootStatus!,
+                            style: const TextStyle(fontFamily: 'monospace'),
+                          ),
+                        ),
+                      ),
                     if (_error != null) _errorBanner(),
                     Expanded(
                       child: _loading
-                          ? const Center(child: CircularProgressIndicator())
+                          ? Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  const CircularProgressIndicator(),
+                                  if (_bootStatus != null) ...[
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      _bootStatus!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            color: CyberForgeColors.muted,
+                                          ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            )
                           : IndexedStack(
                               index: _selectedIndex,
                               children: <Widget>[
@@ -286,6 +364,12 @@ final class _CyberForgeCommandCenterState
                     ),
                   ],
                 ),
+            ),
+            if (_showAdvancedGuide)
+              AdvancedBootGuide(
+                onFinished: () => setState(() => _showAdvancedGuide = false),
+              ),
+          ],
         );
       },
     );
@@ -296,12 +380,12 @@ final class _CyberForgeCommandCenterState
     actions: <Widget>[
       IconButton(
         tooltip: 'SIMCOM',
-        onPressed: () => setState(() => _selectedIndex = 5),
+        onPressed: () => setState(() => _selectedIndex = 6),
         icon: const Icon(Icons.terminal),
       ),
       IconButton(
         tooltip: 'Safety',
-        onPressed: () => setState(() => _selectedIndex = 6),
+        onPressed: () => setState(() => _selectedIndex = 7),
         icon: const Icon(Icons.policy),
       ),
     ],
@@ -1081,6 +1165,8 @@ final class _CyberForgeCommandCenterState
                   'help',
                   'bootcom',
                   'status',
+                  './datapull origin of regional outage --mode multi',
+                  'simcom entry_vector --mode predictive --scope twin_alpha --engine dyson_gamma',
                   'scan --worlds 12000',
                   'impact',
                   'council',
@@ -1115,7 +1201,7 @@ final class _CyberForgeCommandCenterState
                         decoration: const InputDecoration(
                           prefixText: '> ',
                           hintText:
-                              'boot | status | scan | timeline | impact | hotspots | council | origin',
+                              './datapull <topic> | boot | scan | simcom entry_vector | council | origin',
                         ),
                       ),
                     ),
@@ -1278,6 +1364,26 @@ final class _CyberForgeCommandCenterState
         ),
         const SizedBox(height: 20),
         _Panel(
+          title: 'ADVANCED BOOT GUIDE',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                _bootStatus == null
+                    ? 'Replay the AEGIS-816 advanced boot guide covering vault, lattice micro-scans, SIMCOM DATAPULL, and first super-scan workflow.'
+                    : 'Last boot: $_bootStatus',
+              ),
+              const SizedBox(height: 12),
+              FilledButton.tonalIcon(
+                onPressed: _showGuideAgain,
+                icon: const Icon(Icons.auto_awesome),
+                label: const Text('Open advanced boot guide'),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        _Panel(
           title: 'SESSION STORAGE',
           child: Column(
             children: <Widget>[
@@ -1421,6 +1527,10 @@ final class _CyberForgeCommandCenterState
     return null;
   }
 
+  Future<void> _showGuideAgain() async {
+    setState(() => _showAdvancedGuide = true);
+  }
+
   Future<void> _vaultPasswordDialog({required bool create}) async {
     final controller = TextEditingController();
     var createMode = create;
@@ -1488,6 +1598,8 @@ final class _CyberForgeCommandCenterState
       } else {
         await _client.unlockVault(controller.text);
       }
+      // Persist for every-boot unlock (device key preferred when present).
+      await _config.writeSecret('vault_password', controller.text);
       await _refreshHealth();
       _notice(createMode ? 'Encrypted vault created.' : 'Vault unlocked.');
     } on Object catch (error) {

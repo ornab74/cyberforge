@@ -6,6 +6,7 @@ import json
 import shlex
 
 from .crypto import pq_status
+from .datapull import execute_datapull, execute_predictive_simcom, parse_datapull_command
 from .guardrails import GuardrailError, inspect_intent
 from .models import MODEL_MANAGER
 from .providers import MODEL_COUNCIL
@@ -45,21 +46,22 @@ class SimComTerminal:
             if not tokens:
                 return self._help(command)
             root = tokens[0].lower().lstrip("./")
+            if root.startswith("/"):
+                root = root[1:]
             if root in {"help", "?"}:
                 return self._help(command)
             if root in {"boot", "bootcom"}:
                 return SimComResult(command, True, tuple(SIMSTATION.boot_report()))
             if root in {"datapull", "evidence", "reconstruct"}:
-                return SimComResult(
+                return await self._datapull(command, tokens, packet)
+            if root == "simcom" and len(tokens) >= 2:
+                return await self._predictive(command, tokens, packet)
+            if root in {"entry_vector", "timing", "estimate"}:
+                # Bare predictive verbs: entry_vector --mode predictive --scope X
+                return await self._predictive(
                     command,
-                    True,
-                    (
-                        "LOCAL SIMULATION DATAPULL",
-                        "No external query was performed.",
-                        "This terminal can summarize the currently loaded defensive simulation only.",
-                        "Use `scan` first, then `impact`, `hotspots`, `paths`, or `council`.",
-                        "Attribution remains disabled without verified forensic evidence.",
-                    ),
+                    ["simcom", *tokens],
+                    packet,
                 )
             if root == "status":
                 return self._status(command)
@@ -98,15 +100,32 @@ class SimComTerminal:
                 council = self.last_report.get("council", {})
                 return SimComResult(command, True, tuple(self._council_lines(council)), council)
             if root == "origin":
+                # Forensic boundary by default; predictive ISO-2 only with --mode predictive.
+                if "--mode" in tokens and "predictive" in tokens:
+                    scope = self._option_str(tokens, "--scope") or "authorized digital twin"
+                    result = await execute_predictive_simcom(
+                        "country",
+                        scope=scope,
+                        command=command,
+                        packet=packet,
+                    )
+                    return SimComResult(
+                        command,
+                        True,
+                        tuple(result["lines"]),
+                        result.get("payload"),
+                    )
                 return SimComResult(
                     command,
                     True,
                     (
                         "ORIGIN / ATTRIBUTION BOUNDARY",
-                        "Country: not attributed",
-                        "Threat actor: not attributed",
-                        "Reason: synthetic simulation cannot establish forensic identity or geography.",
-                        "Use signed forensic evidence, provider logs, and investigating-authority findings instead.",
+                        "Country: not attributed (forensic)",
+                        "Threat actor: not attributed (forensic)",
+                        "Reason: real IR packages are required for legal attribution.",
+                        "For lattice-only projection use: origin --mode predictive --scope <topic>",
+                        "or: ./datapull origin of <topic> --mode multi",
+                        "SIM_FORENSIC country codes are predictive interface outputs, not LEA findings.",
                     ),
                 )
             if root == "export":
@@ -130,6 +149,75 @@ class SimComTerminal:
             return SimComResult(command, False, (str(exc),))
         except Exception as exc:
             return SimComResult(command, False, (f"SIMCOM ERROR: {exc}",))
+
+    async def _datapull(
+        self,
+        command: str,
+        tokens: list[str],
+        packet: Optional[dict[str, Any]],
+    ) -> SimComResult:
+        parsed = parse_datapull_command(tokens)
+        topic = parsed["topic"]
+        if not topic and self.last_report is not None:
+            topic = str(self.last_report.get("name") or "current twin report")
+        if not topic:
+            return SimComResult(
+                command,
+                False,
+                (
+                    "DATAPULL requires a topic.",
+                    "Example: ./datapull origin of regional outage --mode multi",
+                    "Example: datapull <topic> --mode single --provider offline",
+                ),
+            )
+        result = await execute_datapull(
+            topic,
+            mode=parsed["mode"],
+            provider=parsed["provider"],
+            command=command if command.strip().startswith("./") else f"./datapull {topic}",
+            packet=packet,
+        )
+        return SimComResult(
+            command,
+            bool(result.get("ok")),
+            tuple(result.get("lines") or ()),
+            result.get("payload"),
+        )
+
+    async def _predictive(
+        self,
+        command: str,
+        tokens: list[str],
+        packet: Optional[dict[str, Any]],
+    ) -> SimComResult:
+        # simcom <kind> [--scope X] [--mode predictive] [--engine dyson_gamma]
+        kind = tokens[1].lower() if len(tokens) > 1 else "entry_vector"
+        scope = self._option_str(tokens, "--scope") or self._option_str(tokens, "--target")
+        if not scope:
+            # remainder words that are not flags
+            rest = [
+                t
+                for t in tokens[2:]
+                if not t.startswith("--")
+                and t not in {"predictive", "datetime", "two-letter"}
+            ]
+            scope = " ".join(rest).strip() or (
+                str(self.last_report.get("name")) if self.last_report else "authorized digital twin"
+            )
+        if kind in {"origin"} and self._option_str(tokens, "--output") == "two-letter":
+            kind = "country"
+        result = await execute_predictive_simcom(
+            kind,
+            scope=scope,
+            command=command,
+            packet=packet,
+        )
+        return SimComResult(
+            command,
+            bool(result.get("ok")),
+            tuple(result.get("lines") or ()),
+            result.get("payload"),
+        )
 
     def _status(self, command: str) -> SimComResult:
         vault = VAULT.status()
@@ -228,6 +316,16 @@ class SimComTerminal:
             raise ValueError(f"{option} requires an integer value.") from exc
 
     @staticmethod
+    def _option_str(tokens: list[str], option: str) -> Optional[str]:
+        try:
+            index = tokens.index(option)
+        except ValueError:
+            return None
+        if index + 1 >= len(tokens):
+            return None
+        return tokens[index + 1]
+
+    @staticmethod
     def _scan_lines(report: dict[str, Any]) -> list[str]:
         impact = report.get("impactEstimate", {}).get("affectedEquivalentRange", {})
         dimensions = sorted(
@@ -264,12 +362,14 @@ class SimComTerminal:
                 "CYBERFORGE SIMCOM COMMANDS",
                 "bootcom                 Show simulated AEGIS-816 boot report",
                 "boot                    Alias for bootcom",
-                "datapull <topic>        Local-only simulation summary; no web search",
-                "/help                   Show slash-command help",
-                "/bootcom                Show the simulated boot report",
-                "/status                 Show local readiness",
-                "/scan [--worlds N]      Run the authorized simulation",
-                "/news                   External news requires the UI opt-in and vault provider",
+                "./datapull <topic>      AMCCS DATAPULL + SimForensics (Dyson Sphere Gamma)",
+                "datapull <topic> [--mode single|multi] [--provider auto|xai|openai|local|offline]",
+                "  Reconstruct reported/claimed facts + SIM_FORENSIC lattice (entry, timing, scale, country)",
+                "simcom entry_vector --mode predictive --scope <id> --engine dyson_gamma",
+                "simcom timing --target entry_vector --mode predictive --output datetime",
+                "simcom estimate --scope compromise|percentage --target <id> --mode predictive",
+                "origin                 Forensic attribution boundary (not attributed)",
+                "origin --mode predictive --scope <topic>   Simulated ISO-2 country (SIM_FORENSIC only)",
                 "status                  Show vault, local model, PQ, and provider status",
                 "scan [--worlds N] [--seed N] [--remote]  Run the authorized super scanner",
                 "timeline                Show highest simulated pressure windows",
@@ -277,16 +377,16 @@ class SimComTerminal:
                 "hotspots                Show named-location risk concentrations",
                 "paths                   Show simulated trust-path amplification",
                 "council                 Show multi-model defensive consensus",
-                "origin                  Explain the evidence-based attribution boundary",
                 "export                  Return the current structured report",
                 "help                    Show this command set",
                 "",
                 "QUICK START",
-                "1. bootcom               Verify the local simstation boot state",
-                "2. status                Check vault, models, and providers",
-                "3. scan --worlds 12000  Run a defensive simulation",
-                "4. impact                Review modeled operational impact",
-                "5. council               Review defensive model consensus",
+                "1. bootcom",
+                "2. ./datapull origin of regional outage --mode multi",
+                "3. simcom entry_vector --mode predictive --scope twin_alpha --engine dyson_gamma",
+                "4. scan --worlds 12000",
+                "5. council",
+                "SIM_FORENSIC outputs are lattice reconstructions — not LEA forensics.",
                 "Commands are simulation and planning tools, not live-target actions.",
             ),
         )

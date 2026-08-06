@@ -12,11 +12,9 @@ class NewsCaptureError(RuntimeError):
     pass
 
 
-NEWS_PROMPT = """Research the reported cybersecurity incident using public sources only.
-Return a concise defensive incident brief. Separate verified reporting, attributed
-claims, uncertainty, and unknowns. Do not identify a threat actor from speculation.
-Return JSON with keys: summary, verified_facts, uncertainty, unknowns, sources."""
+from .prompt_library import news_research_system
 
+NEWS_PROMPT = news_research_system()
 
 def _text(payload: dict[str, Any]) -> str:
     if payload.get("output_text"):

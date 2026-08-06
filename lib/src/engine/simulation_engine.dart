@@ -220,7 +220,7 @@ final class SimulationEngine {
         assumptions: const <String>[
           'Scenario data is synthetic and covered by the stated authorization boundary.',
           'Probabilities are comparative planning signals, not guarantees.',
-          'No exploit execution or live-target probing is performed.',
+          'This run is a defensive digital-twin simulation on authorized scenario inputs.',
         ],
       );
     }).where((finding) => finding.probability >= 0.025).toList(growable: false)

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import '../domain/models.dart';
 
-enum ModelProvider { openAi, xAi, gemini, gemmaLocal, offline }
+enum ModelProvider { openAi, xAi, gemini, metaMuse, gemmaLocal, offline }
 
 final class ModelOpinion {
   const ModelOpinion({

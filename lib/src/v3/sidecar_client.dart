@@ -102,8 +102,17 @@ final class CyberForgeSidecarClient {
             if (packet != null) 'packet': packet,
           }),
         )
-        .timeout(const Duration(minutes: 3));
+        // DATAPULL multi-model runs (retrieval + AMCCS shards) can take several minutes.
+        .timeout(const Duration(minutes: 10));
     return SimcomResponse.fromJson(_decode(response));
+  }
+
+  /// Prefer device unlock on every boot when the sidecar holds a device key.
+  Future<void> unlockVaultWithDeviceKey() async {
+    final response = await _http
+        .post(_uri('/v1/vault/unlock-device'))
+        .timeout(const Duration(seconds: 12));
+    await _saveSession(_decode(response));
   }
 
   Future<void> createVault(String password) async {
@@ -128,6 +137,24 @@ final class CyberForgeSidecarClient {
       }),
     );
     await _saveSession(_decode(response));
+  }
+
+  /// Boot-time unlock: device key first, then password from secure config.
+  Future<String> unlockOnBoot({String? password}) async {
+    try {
+      await unlockVaultWithDeviceKey();
+      return 'device';
+    } on Object {
+      // Fall through to password unlock.
+    }
+    final pw = password?.trim() ?? '';
+    if (pw.isEmpty) {
+      throw const SidecarException(
+        'Vault unlock needs device key or vault password.',
+      );
+    }
+    await unlockVault(pw);
+    return 'password';
   }
 
   Future<void> lockVault() async {
@@ -236,7 +263,7 @@ final class CyberForgeSidecarClient {
     }
     try {
       await _storage!.write(key: _sessionKey, value: token);
-    } on Object catch (error) {
+    } on Object {
       _memorySessionToken = token;
     }
   }
