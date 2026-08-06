@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'backend/secure_config_store.dart';
 import 'theme/cyberforge_theme.dart';
+import 'ui/cyberforge_workspace.dart';
 import 'ui/startup_setup_flow.dart';
-import 'v3/cyberforge_command_center.dart';
 
 final class CyberForgeApp extends StatefulWidget {
   const CyberForgeApp({super.key});
@@ -31,7 +31,7 @@ final class _CyberForgeAppState extends State<CyberForgeApp> {
             );
           }
           if (snapshot.data == true) {
-            return const CyberForgeCommandCenter();
+            return const CyberForgeWorkspace();
           }
           return StartupSetupFlow(
             onComplete: () => setState(
