@@ -48,7 +48,13 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
+
+    // The command center intentionally retries the loopback sidecar during
+    // startup. Advance fake time through all bounded retry delays so the test
+    // does not finish with an application timer still pending.
+    for (var attempt = 0; attempt < 14; attempt++) {
+      await tester.pump(const Duration(milliseconds: 300));
+    }
 
     expect(find.byType(CyberForgeCommandCenter), findsOneWidget);
     expect(find.byType(MaterialApp), findsOneWidget);
@@ -60,5 +66,9 @@ void main() {
         matchesGoldenFile('../screenshots/cyberforge_command_center_golden.png'),
       );
     }
+
+    // Explicitly dispose the command center and complete any final microtasks.
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
   });
 }
