@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "CyberForge Phishing Rod",
+  "version": "0.1.0",
+  "description": "Local-first credential gate backed by the CyberForge phishing decision engine.",
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": ["http://127.0.0.1:8787/*", "http://localhost:8787/*"],
+  "background": {"service_worker": "service_worker.js", "type": "module"},
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "action": {"default_title": "CyberForge Phishing Rod"}
+}
