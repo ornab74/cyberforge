@@ -7,7 +7,7 @@ from .config import SETTINGS
 
 def main() -> None:
     uvicorn.run(
-        "cyberforge_sidecar.api:app",
+        "cyberforge_sidecar.application:app",
         host=SETTINGS.bind_host,
         port=SETTINGS.port,
         reload=False,
