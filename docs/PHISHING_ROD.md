@@ -73,7 +73,7 @@ Quorum results include a deterministic decision digest, weighted vote totals, ac
 
 ## Prompt-chain blue-team laboratory
 
-The symbolic simulator models indirect prompt injection without executing content or tools. It propagates taint through webpage, document, retrieval, summary, memory, checkpoint, training, and tool-request nodes. This adapts the uploaded Superchain Lab ideas around multi-tier tainted memory, capability-scoped symbolic tools, tamper-evident ledgers, replay digests, ontology drift, narrative feedback, and system-level coupling into defensive controls. The uploaded simulator explicitly separated working, episodic, semantic, and archive memory and filtered retrieval using taint thresholds. fileciteturn42file8L716-L795 It also enforced a symbolic capability kernel that denied network, shell, credential, scanning, exploitation, and execution payloads. fileciteturn42file3L225-L305
+The symbolic simulator models indirect prompt injection without executing content or tools. It propagates taint through webpage, document, retrieval, summary, memory, checkpoint, training, and tool-request nodes. This adapts the Superchain Lab ideas around multi-tier tainted memory, capability-scoped symbolic tools, tamper-evident ledgers, replay digests, ontology drift, narrative feedback, and system-level coupling into defensive controls.
 
 Recommended controls include:
 
