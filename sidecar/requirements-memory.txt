@@ -1,0 +1,2 @@
+# Optional advanced retrieval backend. Encrypted SQLite remains authoritative.
+weaviate-client>=4.17,<5
